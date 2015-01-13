@@ -40,49 +40,53 @@ class DefaultFactory implements Factory
 
     /**
      * @param string $name
+     * @param string $session
      *
      * @return Page
      */
-    public function createPage($name)
+    public function createPage($name, $session = null)
     {
         $pageClass = $this->classNameResolver->resolvePage($name);
 
-        return $this->instantiatePage($pageClass);
+        return $this->instantiatePage($pageClass, $session);
     }
 
     /**
      * @param string $name
+     * @param string $session
      *
      * @return Element
      */
-    public function createElement($name)
+    public function createElement($name, $session = null)
     {
         $elementClass = $this->classNameResolver->resolveElement($name);
 
-        return $this->instantiateElement($elementClass);
+        return $this->instantiateElement($elementClass, $session);
     }
 
     /**
      * @param array|string $selector
+     * @param string $session
      *
      * @return InlineElement
      */
-    public function createInlineElement($selector)
+    public function createInlineElement($selector, $session = null)
     {
-        return new InlineElement($selector, $this->mink->getSession(), $this);
+        return new InlineElement($selector, $this->mink->getSession($session), $this);
     }
 
     /**
      * @param string $class
+     * @param string $session
      *
      * @return PageObject
      */
-    public function instantiate($class)
+    public function instantiate($class, $session = null)
     {
         if (is_subclass_of($class, 'SensioLabs\Behat\PageObjectExtension\PageObject\Page')) {
-            return $this->instantiatePage($class);
+            return $this->instantiatePage($class, $session);
         } elseif (is_subclass_of($class, 'SensioLabs\Behat\PageObjectExtension\PageObject\Element')) {
-            return $this->instantiateElement($class);
+            return $this->instantiateElement($class, $session);
         }
 
         throw new \InvalidArgumentException(sprintf('Not a page object class: %s', $class));
@@ -90,21 +94,23 @@ class DefaultFactory implements Factory
 
     /**
      * @param string $pageClass
+     * @param string $session
      *
      * @return Page
      */
-    private function instantiatePage($pageClass)
+    private function instantiatePage($pageClass, $session = null)
     {
-        return new $pageClass($this->mink->getSession(), $this, $this->pageParameters);
+        return new $pageClass($this->mink->getSession($session), $this, $this->pageParameters);
     }
 
     /**
      * @param string $elementClass
+     * @param string $session
      *
      * @return Element
      */
-    private function instantiateElement($elementClass)
+    private function instantiateElement($elementClass, $session = null)
     {
-        return new $elementClass($this->mink->getSession(), $this);
+        return new $elementClass($this->mink->getSession($session), $this);
     }
 }

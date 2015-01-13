@@ -16,34 +16,36 @@ class PageObjectContext implements Context, PageObjectAware
 
     /**
      * @param string $name
+     * @param string $session
      *
      * @return Page
      *
      * @throws \RuntimeException
      */
-    public function getPage($name)
+    public function getPage($name, $session = null)
     {
         if (null === $this->pageObjectFactory) {
             throw new \RuntimeException('To create pages you need to pass a factory with setPageObjectFactory()');
         }
 
-        return $this->pageObjectFactory->createPage($name);
+        return $this->pageObjectFactory->createPage($name, $session);
     }
 
     /**
      * @param string $name
+     * @param string $session
      *
      * @return Element
      *
      * @throws \RuntimeException
      */
-    public function getElement($name)
+    public function getElement($name, $session = null)
     {
         if (null === $this->pageObjectFactory) {
             throw new \RuntimeException('To create elements you need to pass a factory with setPageObjectFactory()');
         }
 
-        return $this->pageObjectFactory->createElement($name);
+        return $this->pageObjectFactory->createElement($name, $session);
     }
 
     /**
